@@ -1,41 +1,30 @@
-// Step 1: Define createLoginTracker (Outer Function) accepting userInfo object
+/// Step 1: Define createLoginTracker (Outer Function) accepting userInfo object
 const createLoginTracker = (userInfo) => {
-  // Initialize tracking variable inside closure scope
   let attemptCount = 0;
   const maxAttempts = 3;
 
   // Step 2: Implement and return inner arrow function
-  return (usernameAttempt, passwordAttempt) => {
-    // Check if account is already locked
+  return (passwordAttempt) => {
+    // If already locked from previous attempts exceeding the limit
     if (attemptCount >= maxAttempts) {
-      return "Account Locked";
+      return "Account locked due to too many failed login attempts";
     }
 
-    // Increment attemptCount on every attempt
     attemptCount++;
 
-    // Validate credentials
-    const isUsernameValid = usernameAttempt === userInfo.username;
-    const isPasswordValid = passwordAttempt === userInfo.password;
-
-    if (isUsernameValid && isPasswordValid) {
-      return "Login Successful!";
+    // Validate password against userInfo.password
+    if (passwordAttempt === userInfo.password) {
+      return "Login successful";
     } else {
-      // Check if this failed attempt reached max attempts
-      if (attemptCount >= maxAttempts) {
-        return "Account Locked";
+      // Check if this attempt exceeds max attempts
+      if (attemptCount > maxAttempts) {
+        return "Account locked due to too many failed login attempts";
       }
-      return "Invalid Credentials";
+      // Allows Attempt 1, 2, and 3 to return failure messages properly
+      return `Attempt ${attemptCount}: Login failed`;
     }
   };
 };
 
 // Required Export for automated lab testing
-if (typeof module !== "undefined") {
-  module.exports = { createLoginTracker };
-}
-
-
-module.exports = {
-  ...(typeof createLoginTracker !== 'undefined' && { createLoginTracker })
-};
+module.exports = { createLoginTracker };
